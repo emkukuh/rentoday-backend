@@ -2,7 +2,7 @@ package app
 
 import (
 	"rentoday.id/app/controller"
-	// "rentoday.id/app/database"
+	"rentoday.id/app/database"
 	"rentoday.id/app/service"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +15,7 @@ var (
 
 func Run() {
 	router := gin.Default()
-	// database.Start()
+	database.Start()
 	router.GET("/wardrobe/list", getWardrobeList)
 	router.POST("/wardrobe/add", postWardrobe)
 	router.Run(":4000")

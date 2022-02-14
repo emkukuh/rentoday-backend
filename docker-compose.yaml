@@ -6,10 +6,34 @@ services:
       DB_HOST: localhost
       DB_PORT: 5432
       DB_USER: root
-      DB_NAME: sewasewi
-      DB_PASSWORD: secret
+      DB_NAME: rentoday
+      DB_PASSWORD: password
     ports:
-    - 4000:4000
+    - 80:4000
     working_dir: /source
     volumes:
     - ./:/source
+    depends_on:
+      - rentoday-postgres
+  rentoday-postgres:
+    image: postgres:14.2-alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: rentoday
+    ports:
+      - 5432:5432
+    volumes:
+      - rentoday-postgres:/var/lib/postgresql/data
+  rentoday-postgres-admin:
+    image: adminer
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: pgsql
+      ADMINER_DEFAULT_SERVER: rentoday-postgres
+      ADMINER_DEFAULT_DB_NAME: rentoday
+    ports:
+      - 4011:8080
+    depends_on:
+      - theater-postgres
+volumes:
+  rentoday-postgres:
