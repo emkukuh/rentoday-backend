@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 	"os"
-	"rentoday.id/app/database/model"
+	"rentoday.id/app/model"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -24,8 +24,9 @@ func Start() {
 		panic(err)
 	}
 	DB.AutoMigrate(
-		&database.Wardrobe{},
-		&database.WardrobeCategory{},
-		&database.WardrobeMaterial{},
+		&model.Wardrobe{},
+		&model.WardrobeCategory{},
+		&model.WardrobeMaterial{},
+		&model.User{},
 	)
 }

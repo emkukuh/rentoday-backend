@@ -1,6 +1,6 @@
 package model
 
 type WardrobeCategory struct {
-	ID			string	`json:"id"`
+	ID			string	`gorm:"primaryKey" json:"id"`
 	Name	 	string	`json:"name"`
 }
