@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"rentoday.id/routes/wardrobe"
+	"rentoday.id/app/routes/wardrobe"
 )
 
 func SetupRoutes(router *gin.Engine) *gin.Engine {
