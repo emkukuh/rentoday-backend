@@ -34,6 +34,6 @@ services:
     ports:
       - 4011:8080
     depends_on:
-      - theater-postgres
+      - rentoday-postgres
 volumes:
   rentoday-postgres:
