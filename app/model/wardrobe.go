@@ -6,5 +6,5 @@ type Wardrobe struct {
 	Category    string  	`json:"category"`
 	Material	string		`json:"material"`
 	Size 		string 		`json:"size"`
-	Images		[]string 	`gorm:"type:text" json:"images"`
+	Images		[]string 	`gorm:"type:text[]" json:"images"`
 }

@@ -62,31 +62,5 @@ func (c *authController) Register(ctx *gin.Context) {
 	}
 	response := helper.BuildResponse(true, newUser)
 
-	// isDuplicated, err := authService.IsDuplicateEmail(registerDto.Email)
-	// if err != nil {
-	// 	response := helper.BuildErrorResponse(constant.ErrorRequestMessage, err.Error(), helper.EmptyObj{})
-	// 	ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
-	// 	return
-	// }
-	// if isDuplicated {
-	// 	response := helper.BuildErrorResponse(constant.ErrorRequestMessage, "email duplicate", helper.EmptyObj{})
-	// 	ctx.JSON(http.StatusConflict, response)
-	// 	return
-	// }
-	// authService.CreateUser(registerDto)
 	ctx.JSON(http.StatusOK, response)
-
-	// if isDuplicted, err := c.authService.IsDuplicateEmail(registerDto.Email) {
-	// 	response := helper.BuildErrorResponse(constant.ErrorRequestMessage, "email duplicate", helper.EmptyObj{})
-	// 	ctx.JSON(http.StatusConflict, response)
-	// 	return
-	// } else {
-		// createdUser := c.authService.CreateUser(registerDto)
-		// token := c.jwtService.GenerateToken(strconv.FormatUint(createdUser.ID, 10))
-		// createdUser.Token = token
-		// response := helper.BuildResponse(true, createdUser)
-		// ctx.JSON(http.StatusCreated, response)
-	// 	ctx.JSON(http.StatusOK, nil)
-	// 	return
-	// }
 }

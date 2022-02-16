@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	wardrobeController controller.WardrobeController	= controller.NewWardrobeController()
+	wardrobeController controller.WardrobeController = controller.NewWardrobeController()
 )
 
 func postWardrobe(ctx *gin.Context) {
