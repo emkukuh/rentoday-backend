@@ -20,7 +20,7 @@ func getWardrobeList(ctx *gin.Context) {
 }
 
 func CreateRouter(router *gin.Engine) {
-	group := router.Group("wardrobe")
+	group := router.Group("api/wardrobe")
 	group.GET("/list", getWardrobeList)	
 	group.POST("/add", postWardrobe)	
 }
