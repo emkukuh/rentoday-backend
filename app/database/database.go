@@ -10,7 +10,6 @@ import (
 )
 
 var DB *gorm.DB
-var err error
 
 func Start() {
 	host := "rentoday-backend-rentoday-postgres-1"
@@ -19,10 +18,11 @@ func Start() {
 	user := os.Getenv("DB_USER")
 	dbURI := fmt.Sprintf(
 		"host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, user, dbName, "password", dbPort)
-	DB, err = gorm.Open(postgres.New(postgres.Config{DSN: dbURI}), &gorm.Config{})
+	db, err := gorm.Open(postgres.New(postgres.Config{DSN: dbURI}), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
+	DB = db
 	DB.AutoMigrate(
 		&model.Wardrobe{},
 		&model.WardrobeCategory{},

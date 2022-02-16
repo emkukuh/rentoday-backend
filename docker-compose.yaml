@@ -8,6 +8,7 @@ services:
       DB_USER: root
       DB_NAME: rentoday
       DB_PASSWORD: password
+      JWT_SECRET_KEY: secret
     ports:
     - 80:4000
     working_dir: /source

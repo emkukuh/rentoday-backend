@@ -2,8 +2,6 @@ package helper
 
 import (
 	"strings"
-
-	"golang.org/x/text/message"
 )
 
 type Response struct {	
@@ -15,10 +13,10 @@ type Response struct {
 
 type EmptyObj struct {}
 
-func BuildResponse(status bool, message string, data interface{}) Response {
+func BuildResponse(status bool, data interface{}) Response {
 	res := Response {
 		Status: status,
-		Message: message,
+		Message: "OK",
 		Errors: nil,
 		Data: data,
 	}

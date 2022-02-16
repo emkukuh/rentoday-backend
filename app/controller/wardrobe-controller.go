@@ -6,28 +6,26 @@ import (
 	"rentoday.id/app/service"
 )
 
-type WardrobeControllerInterface interface {
+var wardrobeService = service.NewWardrobeService()
+
+type WardrobeController interface {
 	FindAll() []model.Wardrobe
 	Save(ctx  *gin.Context) model.Wardrobe
 }
 
-type WardrobeController struct {
-	service service.WardrobeServiceInterface
+type wardrobeController struct {}
+
+func NewWardrobeController() WardrobeController {
+	return &wardrobeController{}
 }
 
-func New(service service.WardrobeServiceInterface) WardrobeController {
-	return WardrobeController {
-		service: service,
-	}
+func (c *wardrobeController) FindAll() []model.Wardrobe {
+	return wardrobeService.FindAll()
 }
 
-func (c *WardrobeController) FindAll() []model.Wardrobe {
-	return c.service.FindAll()
-}
-
-func (c *WardrobeController) Save(ctx *gin.Context) model.Wardrobe {
+func (c *wardrobeController) Save(ctx *gin.Context) model.Wardrobe {
 	var wardrobe model.Wardrobe
 	ctx.BindJSON(&wardrobe)
-	c.service.Save(wardrobe)
+	wardrobeService.Save(wardrobe)
 	return wardrobe
 }
