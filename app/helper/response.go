@@ -33,14 +33,3 @@ func BuildErrorResponse(message string, err string, data interface{}) Response {
 	}
 	return res
 }
-
-func BuildBadRequestError(err string) Response {
-	splittedError := strings.Split(err, "\n")
-	res := Response{
-		Status: false,
-		Message: "nil",
-		Errors: splittedError,
-		Data: nil,
-	}
-	return res
-}
