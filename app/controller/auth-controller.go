@@ -37,7 +37,7 @@ func (c *authController) Login(ctx *gin.Context) {
 	authResult := authService.VerifyCredential(loginDto.Email, loginDto.Password)
 	if v, ok := authResult.(model.User); ok {
 		generatedToken := jwtService.GenerateToken(strconv.FormatUint(v.ID, 10))
-		v.Token = generatedToken
+		v.AccessToken = generatedToken
 		response := response.BuildResponse(true, v)
 		ctx.JSON(http.StatusOK,response)
 		return
@@ -54,13 +54,12 @@ func (c *authController) Register(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
-	newUser, newUserErr := authService.Register(registerDto)
-	if newUserErr != nil {
-		response := response.BuildErrorResponse(constant.ErrorRequestMessage, newUserErr.Error(), response.EmptyObj{})
+	newUser, err := authService.Register(registerDto)
+	if err != nil {
+		response := response.BuildErrorResponse(constant.ErrorRequestMessage, err.Error(), response.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
 	response := response.BuildResponse(true, newUser)
-
 	ctx.JSON(http.StatusOK, response)
 }

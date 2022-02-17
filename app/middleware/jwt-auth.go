@@ -11,11 +11,13 @@ import (
 	"rentoday.id/app/service"
 )
 
-func AuthJwt(jwtService service.JwtServiceInterface) gin.HandlerFunc {
+var jwtService service.JwtServiceInterface = service.NewJwtService()
+
+func AuthJwt() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader(constant.Auth)
 		if authHeader == "" {
-			response := helper.BuildErrorResponse("Failed to process request", "Token not found", nil)
+			response := response.BuildErrorResponse("Failed to process request", "Token not found", nil)
 			c.AbortWithStatusJSON(http.StatusBadRequest, response)
 		}
 		token, err := jwtService.ValidateToken(authHeader)
@@ -25,7 +27,7 @@ func AuthJwt(jwtService service.JwtServiceInterface) gin.HandlerFunc {
 			log.Println("Claim[issuer]: ", claims["issuer"])
 		} else {
 			log.Println(err)
-			response := helper.BuildErrorResponse("Token not valid", err.Error(), nil)
+			response := response.BuildErrorResponse("Token not valid", err.Error(), nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 		}
 	}

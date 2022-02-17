@@ -5,5 +5,5 @@ type User struct {
 	Name 		string	`json:"name"`
 	Email 		string	`json:"email"`
 	Password	string	`gorm:"->;<-;not null" json:"-"`
-	Token		string 	`gorm:"-" json:"token,omitempty"`
+	AccessToken		string 	`gorm:"-" json:"accessToken,omitempty"`
 }

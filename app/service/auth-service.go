@@ -55,7 +55,7 @@ func (service *authService) Register(user dto.RegisterDto) (model.User, error) {
 		log.Fatalf("failed to map %v", errSmapping)
 	}
 	token := jwtService.GenerateToken(strconv.FormatUint(newUser.ID, 10))
-	newUser.Token = token
+	newUser.AccessToken = token
 	res, err := userRepo.InsertUser(newUser)
 	return res, err
 }

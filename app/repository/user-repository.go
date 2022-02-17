@@ -21,7 +21,7 @@ func NewUserRepository() UserRepository {
 	
 }
 func (r *userRepository) InsertUser(user model.User) (model.User, error) {
-	user.Password = hashAndSalt([]byte(user.Password))
+	user.Password = hashAndSaltPassword(user.Password)
 	res := database.DB.Create(&user)
 	return user, res.Error
 } 
@@ -41,8 +41,8 @@ func (r *userRepository) FindUserByEmail(email string) (model.User, error) {
 	return user, res.Error
 }
 
-func hashAndSalt(pwd []byte) string {
-	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+func hashAndSaltPassword(password string) string {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	if err != nil {
 		log.Println(err)
 		panic("failed to hash password")
