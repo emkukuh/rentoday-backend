@@ -1,4 +1,4 @@
-package helper
+package response
 
 import (
 	"strings"
@@ -30,6 +30,17 @@ func BuildErrorResponse(message string, err string, data interface{}) Response {
 		Message: message,
 		Errors: splittedError,
 		Data: data,
+	}
+	return res
+}
+
+func BuildBadRequestError(err string) Response {
+	splittedError := strings.Split(err, "\n")
+	res := Response{
+		Status: false,
+		Message: "nil",
+		Errors: splittedError,
+		Data: nil,
 	}
 	return res
 }
