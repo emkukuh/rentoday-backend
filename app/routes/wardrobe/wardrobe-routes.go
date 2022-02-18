@@ -5,22 +5,19 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"rentoday.id/app/controller"
+	"rentoday.id/app/middleware"
 )
 
 var (
 	wardrobeController controller.WardrobeController = controller.NewWardrobeController()
 )
 
-func postWardrobe(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, wardrobeController.Save(ctx))
-}
-
 func getWardrobeList(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, wardrobeController.FindAll())
 }
 
 func CreateRouter(router *gin.Engine) {
-	group := router.Group("api/wardrobe")
+	group := router.Group("api/wardrobe", middleware.AuthJwt())
 	group.GET("/list", getWardrobeList)	
-	group.POST("/add", postWardrobe)	
+	group.POST("/add", wardrobeController.AddWardrobe)	
 }

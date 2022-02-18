@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"log"
+	// "log"
 
-	"golang.org/x/crypto/bcrypt"
+	// "golang.org/x/crypto/bcrypt"
 	"rentoday.id/app/database"
 	"rentoday.id/app/model"
 )
@@ -21,7 +21,7 @@ func NewUserRepository() UserRepository {
 	
 }
 func (r *userRepository) InsertUser(user model.User) (model.User, error) {
-	user.Password = hashAndSaltPassword(user.Password)
+	// user.Password = hashAndSaltPassword(user.Password)
 	res := database.DB.Create(&user)
 	return user, res.Error
 } 
@@ -39,13 +39,4 @@ func (r *userRepository) FindUserByEmail(email string) (model.User, error) {
 	var user model.User
 	res := database.DB.Where("email=?", email).Take(&user)
 	return user, res.Error
-}
-
-func hashAndSaltPassword(password string) string {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
-	if err != nil {
-		log.Println(err)
-		panic("failed to hash password")
-	}
-	return string(hash)
 }

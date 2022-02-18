@@ -5,13 +5,13 @@ import (
 	"rentoday.id/app/model"
 )
 
-type _ParameterRepository interface {
+type _parameterRepository interface {
 	FindAllWardrobeCategory() ([]model.WardrobeCategory, error)
 	FindAllWardrobeMaterial() ([]model.WardrobeMaterial, error)
 }
 type parameterRepository struct {}
 
-var ParameterRepository _ParameterRepository = &parameterRepository{}
+var ParameterRepository _parameterRepository = &parameterRepository{}
 
 func (p *parameterRepository) FindAllWardrobeCategory() ([]model.WardrobeCategory, error) {
 	var categories []model.WardrobeCategory

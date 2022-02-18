@@ -50,12 +50,13 @@ func (service *authService) Register(user dto.RegisterDto) (model.User, error) {
 	if isDuplicated {
 		return newUser, errors.New("email sudah terdaftar")
 	}
-	errSmapping := smapping.FillStruct(&newUser, smapping.MapFields(&user))
-	if errSmapping != nil {
-		log.Fatalf("failed to map %v", errSmapping)
+	err := smapping.FillStruct(&newUser, smapping.MapFields(&user))
+	if err != nil {
+		log.Fatalf("failed to map %v", err)
 	}
 	token := jwtService.GenerateToken(strconv.FormatUint(newUser.ID, 10))
 	newUser.AccessToken = token
+	newUser.Password = hashAndSaltPassword(user.Password)
 	res, err := userRepo.InsertUser(newUser)
 	return res, err
 }
@@ -76,4 +77,13 @@ func comparePassword(hashPwd string, plainPwd []byte) bool {
 		return false
 	}
 	return true
+}
+
+func hashAndSaltPassword(password string) string {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
+	if err != nil {
+		log.Println(err)
+		panic("failed to hash password")
+	}
+	return string(hash)
 }
