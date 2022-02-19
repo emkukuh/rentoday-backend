@@ -4,17 +4,18 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mashingan/smapping"
+
 	"rentoday.id/app/constant"
 	"rentoday.id/app/dto"
 	"rentoday.id/app/helper"
-	"rentoday.id/app/model"
 	"rentoday.id/app/service"
 )
 
 var wardrobeService = service.NewWardrobeService()
 
 type WardrobeController interface {
-	FindAll() []model.Wardrobe
+	FindAll(ctx *gin.Context)
 	AddWardrobe(ctx *gin.Context)
 }
 
@@ -24,12 +25,30 @@ func NewWardrobeController() WardrobeController {
 	return &wardrobeController{}
 }
 
-func (c *wardrobeController) FindAll() []model.Wardrobe {
-	return wardrobeService.FindAll()
+func (c *wardrobeController) FindAll(ctx *gin.Context) {
+	wardrobes, err := wardrobeService.FindAll()
+	if err != nil {
+		response := response.BuildErrorResponse(constant.ErrorRequestMessage, err.Error(), nil)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
+	}
+	var wardrobesResponse []dto.AddWardrobeResponse
+	for _, wardrobe := range wardrobes {
+		var wardrobeRes dto.AddWardrobeResponse
+		smapping.FillStruct(&wardrobeRes, smapping.MapFields(&wardrobe))
+		wardrobesResponse = append(wardrobesResponse, wardrobeRes)
+	}
+	if err != nil {
+		response := response.BuildErrorResponse("error maaping", err.Error(), nil)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response)
+		return
+	}
+	response := response.BuildSuccessResponse(wardrobesResponse)
+	ctx.JSON(http.StatusOK, response)
 }
 
 func (c *wardrobeController) AddWardrobe(ctx *gin.Context) {
-	var wardrobeDto dto.AddWardrobe
+	var wardrobeDto dto.AddWardrobeRequest
 	ctx.BindJSON(&wardrobeDto)
 	res, err := wardrobeService.Create(wardrobeDto)
 	if err != nil {
@@ -37,5 +56,8 @@ func (c *wardrobeController) AddWardrobe(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
-	ctx.JSON(http.StatusOK, res)
+	var wardrobeResponse dto.AddWardrobeResponse
+	smapping.FillStruct(&wardrobeResponse, smapping.MapFields(&res))
+	response := response.BuildSuccessResponse(wardrobeResponse)
+	ctx.JSON(http.StatusOK, response)
 }

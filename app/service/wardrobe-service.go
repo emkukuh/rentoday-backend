@@ -12,8 +12,8 @@ import (
 var wardrobeRepo = repository.WardrobeRepository
 
 type WardrobeService interface {
-	Create(wardrobe dto.AddWardrobe) (model.Wardrobe, error)
-	FindAll() []model.Wardrobe
+	Create(wardrobe dto.AddWardrobeRequest) (model.Wardrobe, error)
+	FindAll() ([]model.Wardrobe, error)
 }
 
 type wardrobeService struct{}
@@ -22,9 +22,11 @@ func NewWardrobeService() WardrobeService {
 	return &wardrobeService{}
 }
 
-func (service *wardrobeService) Create(wardrobe dto.AddWardrobe) (model.Wardrobe, error) {
+func (service *wardrobeService) Create(wardrobe dto.AddWardrobeRequest) (model.Wardrobe, error) {
 	newWardrobe := model.Wardrobe{}
+	log.Print("++++++++++")
 	err := smapping.FillStruct(&newWardrobe, smapping.MapFields(&wardrobe))
+	log.Print("========")
 	if err != nil {
 		log.Fatalf("failed to map %v", err)
 		return newWardrobe, err
@@ -33,6 +35,6 @@ func (service *wardrobeService) Create(wardrobe dto.AddWardrobe) (model.Wardrobe
 	return wardrobeRes, err
 }
 
-func (service *wardrobeService) FindAll() []model.Wardrobe {
-	return make([]model.Wardrobe, 0)
+func (service *wardrobeService) FindAll() ([]model.Wardrobe, error) {
+	return wardrobeRepo.FindAllWardrobe()
 }

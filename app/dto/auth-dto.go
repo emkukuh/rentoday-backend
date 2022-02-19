@@ -12,7 +12,7 @@ type RegisterDto struct {
 }
 
 type LoginAdminResponseDto struct {
-	ID          string `json:"id"`
+	ID          uint64 `json:"id"`
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	AccessToken string `json:"accessToken"`

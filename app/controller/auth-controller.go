@@ -66,6 +66,7 @@ func (c *authController) LoginAdmin(ctx *gin.Context) {
 	authResult.AccessToken = generatedToken
 	var loginResponseDto dto.LoginAdminResponseDto
 	smapping.FillStruct(&loginResponseDto, smapping.MapFields(&authResult))
+	loginResponseDto.ID = authResult.ID
 	response := response.BuildSuccessResponse(loginResponseDto)
 	ctx.JSON(http.StatusOK, response)
 }
