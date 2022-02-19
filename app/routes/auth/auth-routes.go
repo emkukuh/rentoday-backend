@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	authController 	controller.AuthControllerInterface = controller.NewAuthController()
+	authController controller.AuthControllerInterface = controller.NewAuthController()
 )
 
 func CreateRouter(router *gin.Engine) {
