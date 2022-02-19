@@ -25,7 +25,7 @@ var (
 )
 
 func (a *authAdminService) VerifyCredential(email string, password string) (model.Admin, error) {
-	admin, err := adminRepo.VerifyCredential(email, password)
+	admin, err := adminRepo.FindUserByEmail(email)
 	if err != nil {
 		return admin, err
 	}
@@ -38,14 +38,14 @@ func (a *authAdminService) VerifyCredential(email string, password string) (mode
 
 func (a *authAdminService) Register(user dto.RegisterDto) (model.Admin, error) {
 	newAdmin := model.Admin{}
-	isDuplicated, errIsDuplicated := isAdminEmailDuplicated(user.Email)
-	if errIsDuplicated != nil {
-		return newAdmin, errIsDuplicated
+	isDuplicated, err := isAdminEmailDuplicated(user.Email)
+	if err != nil {
+		return newAdmin, errors.New("email belum terdaftar")
 	}
 	if isDuplicated {
 		return newAdmin, errors.New("email sudah terdaftar")
 	}
-	err := smapping.FillStruct(&newAdmin, smapping.MapFields(&user))
+	err = smapping.FillStruct(&newAdmin, smapping.MapFields(&user))
 	if err != nil {
 		log.Fatalf("failed to map %v", err)
 	}

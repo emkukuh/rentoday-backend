@@ -10,3 +10,10 @@ type RegisterDto struct {
 	Email    string `json:"email" form:"email" binding:"required" validate:"email"`
 	Password string `json:"password" form:"password" binding:"required"`
 }
+
+type LoginAdminResponseDto struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Email       string `json:"email"`
+	AccessToken string `json:"accessToken"`
+}

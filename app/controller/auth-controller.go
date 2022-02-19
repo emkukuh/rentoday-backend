@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mashingan/smapping"
 	"rentoday.id/app/constant"
 	"rentoday.id/app/dto"
 	"rentoday.id/app/helper"
@@ -59,10 +60,13 @@ func (c *authController) LoginAdmin(ctx *gin.Context) {
 	authResult, err := authAdminService.VerifyCredential(loginDto.Email, loginDto.Password)
 	if err != nil {
 		handleInvalidTokenError(ctx)
+		return
 	}
 	generatedToken := jwtService.GenerateToken(strconv.FormatUint(authResult.ID, 10))
 	authResult.AccessToken = generatedToken
-	response := response.BuildSuccessResponse(authResult)
+	var loginResponseDto dto.LoginAdminResponseDto
+	smapping.FillStruct(&loginResponseDto, smapping.MapFields(&authResult))
+	response := response.BuildSuccessResponse(loginResponseDto)
 	ctx.JSON(http.StatusOK, response)
 }
 
