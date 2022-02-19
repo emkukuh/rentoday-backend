@@ -12,54 +12,98 @@ import (
 	"rentoday.id/app/service"
 )
 
-var jwtService service.JwtServiceInterface = service.NewJwtService()
-var authService = service.NewAuthService()
+var (
+	jwtService       service.JwtServiceInterface = service.NewJwtService()
+	authUserService                              = service.AuthUserService
+	authAdminService                             = service.AuthAdminService
+)
 
 type AuthControllerInterface interface {
-	Login(ctx *gin.Context)
-	Register(ctx *gin.Context)
+	LoginUser(ctx *gin.Context)
+	LoginAdmin(ctx *gin.Context)
+	RegisterUser(ctx *gin.Context)
+	RegisterAdmin(ctx *gin.Context)
 }
 
-type authController struct {}
+type authController struct{}
 
 func NewAuthController() AuthControllerInterface {
 	return &authController{}
 }
 
-func (c *authController) Login(ctx *gin.Context) {
+func (c *authController) LoginUser(ctx *gin.Context) {
 	var loginDto dto.LoginDto
 	err := ctx.ShouldBind(&loginDto)
 	if err != nil {
-		response := response.BuildErrorResponse("failed to process request", err.Error(), response.EmptyObj{})
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		handleBadRequestError(ctx, err)
 		return
 	}
-	authResult := authService.VerifyCredential(loginDto.Email, loginDto.Password)
+	authResult := authUserService.VerifyCredential(loginDto.Email, loginDto.Password)
 	if v, ok := authResult.(model.User); ok {
 		generatedToken := jwtService.GenerateToken(strconv.FormatUint(v.ID, 10))
 		v.AccessToken = generatedToken
 		response := response.BuildResponse(true, v)
-		ctx.JSON(http.StatusOK,response)
+		ctx.JSON(http.StatusOK, response)
 		return
 	}
-	response := response.BuildErrorResponse("invalid credential", "invalid credential", response.EmptyObj{})
-	ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
+	handleInvalidTokenError(ctx)
 }
 
-func (c *authController) Register(ctx *gin.Context) {
+func (c *authController) LoginAdmin(ctx *gin.Context) {
+	var loginDto dto.LoginDto
+	err := ctx.ShouldBind(&loginDto)
+	if err != nil {
+		handleBadRequestError(ctx, err)
+		return
+	}
+	authResult, err := authAdminService.VerifyCredential(loginDto.Email, loginDto.Password)
+	if err != nil {
+		handleInvalidTokenError(ctx)
+	}
+	generatedToken := jwtService.GenerateToken(strconv.FormatUint(authResult.ID, 10))
+	authResult.AccessToken = generatedToken
+	response := response.BuildSuccessResponse(authResult)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (c *authController) RegisterUser(ctx *gin.Context) {
 	var registerDto dto.RegisterDto
 	err := ctx.ShouldBind(&registerDto)
 	if err != nil {
-		response := response.BuildErrorResponse(constant.ErrorRequestMessage, err.Error(), response.EmptyObj{})
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		handleBadRequestError(ctx, err)
 		return
 	}
-	newUser, err := authService.Register(registerDto)
+	newUser, err := authUserService.Register(registerDto)
 	if err != nil {
-		response := response.BuildErrorResponse(constant.ErrorRequestMessage, err.Error(), response.EmptyObj{})
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		handleBadRequestError(ctx, err)
 		return
 	}
 	response := response.BuildResponse(true, newUser)
 	ctx.JSON(http.StatusOK, response)
+}
+
+func (c *authController) RegisterAdmin(ctx *gin.Context) {
+	var registerDto dto.RegisterDto
+	err := ctx.ShouldBind(&registerDto)
+	if err != nil {
+		handleBadRequestError(ctx, err)
+		return
+	}
+	newAdmin, err := authAdminService.Register(registerDto)
+	if err != nil {
+		handleBadRequestError(ctx, err)
+		return
+	}
+	response := response.BuildResponse(true, newAdmin)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func handleBadRequestError(ctx *gin.Context, err error) {
+	response := response.BuildErrorResponse(constant.ErrorRequestMessage, err.Error(), response.EmptyObj{})
+	ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+}
+
+func handleInvalidTokenError(ctx *gin.Context) {
+	response := response.BuildErrorResponse("invalid credential", "invalid credential", response.EmptyObj{})
+	ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
 }

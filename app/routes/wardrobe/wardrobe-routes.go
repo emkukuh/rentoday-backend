@@ -18,6 +18,6 @@ func getWardrobeList(ctx *gin.Context) {
 
 func CreateRouter(router *gin.Engine) {
 	group := router.Group("api/wardrobe", middleware.AuthJwt())
-	group.GET("/list", getWardrobeList)	
-	group.POST("/add", wardrobeController.AddWardrobe)	
+	group.GET("/list", getWardrobeList)
+	group.POST("/add", wardrobeController.AddWardrobe)
 }

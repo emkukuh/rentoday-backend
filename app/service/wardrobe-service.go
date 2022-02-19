@@ -11,13 +11,12 @@ import (
 
 var wardrobeRepo = repository.WardrobeRepository
 
-
 type WardrobeService interface {
 	Create(wardrobe dto.AddWardrobe) (model.Wardrobe, error)
 	FindAll() []model.Wardrobe
 }
 
-type wardrobeService struct {}
+type wardrobeService struct{}
 
 func NewWardrobeService() WardrobeService {
 	return &wardrobeService{}

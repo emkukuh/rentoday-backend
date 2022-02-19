@@ -15,7 +15,7 @@ type ParameterController interface {
 	GetWardrobeMaterials(ctx *gin.Context)
 }
 
-type parameterController struct {}
+type parameterController struct{}
 
 func NewParameterController() ParameterController {
 	return &parameterController{}

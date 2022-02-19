@@ -10,24 +10,24 @@ import (
 )
 
 type JwtServiceInterface interface {
-	GenerateToken(email string) string 
+	GenerateToken(email string) string
 	ValidateToken(token string) (*jwt.Token, error)
 }
 
 type JwtCustomClaim struct {
-	Email				 string `json:"email"`
+	Email string `json:"email"`
 	jwt.StandardClaims
 }
 
 type JwtService struct {
-	SecretKey 	string
-	Issuer 		string
+	SecretKey string
+	Issuer    string
 }
 
 func NewJwtService() JwtServiceInterface {
 	return &JwtService{
 		SecretKey: genereateSecretKey(),
-		Issuer: config.JwtIssuer(),
+		Issuer:    config.JwtIssuer(),
 	}
 }
 
@@ -44,8 +44,8 @@ func (s *JwtService) GenerateToken(email string) string {
 		Email: email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: constant.OneDay24Hour,
-			Issuer: s.Issuer,
-			IssuedAt: time.Now().Unix(),
+			Issuer:    s.Issuer,
+			IssuedAt:  time.Now().Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -57,11 +57,11 @@ func (s *JwtService) GenerateToken(email string) string {
 }
 
 func (s *JwtService) ValidateToken(token string) (*jwt.Token, error) {
-	return jwt.Parse(token, func (t *jwt.Token) (interface{}, error) {
+	return jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method %v", t.Header["alg"])
 		}
 		return []byte(s.SecretKey), nil
-	
+
 	})
 }

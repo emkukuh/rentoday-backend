@@ -9,16 +9,10 @@ var (
 	authController 	controller.AuthControllerInterface = controller.NewAuthController()
 )
 
-func postLogin(ctx *gin.Context) {
-	authController.Login(ctx)
-}
-
-func postRegister(ctx *gin.Context) {
-	authController.Register(ctx)
-}
-
 func CreateRouter(router *gin.Engine) {
 	group := router.Group("api/auth")
-	group.POST("/login", postLogin)
-	group.POST("/register", postRegister)
+	group.POST("/login", authController.LoginUser)
+	group.POST("/register", authController.RegisterUser)
+	group.POST("/admin/register", authController.RegisterAdmin)
+	group.POST("/admin/login", authController.LoginAdmin)
 }

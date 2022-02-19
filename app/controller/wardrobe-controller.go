@@ -15,10 +15,10 @@ var wardrobeService = service.NewWardrobeService()
 
 type WardrobeController interface {
 	FindAll() []model.Wardrobe
-	AddWardrobe(ctx  *gin.Context)
+	AddWardrobe(ctx *gin.Context)
 }
 
-type wardrobeController struct {}
+type wardrobeController struct{}
 
 func NewWardrobeController() WardrobeController {
 	return &wardrobeController{}

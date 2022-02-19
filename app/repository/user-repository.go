@@ -1,9 +1,6 @@
 package repository
 
 import (
-	// "log"
-
-	// "golang.org/x/crypto/bcrypt"
 	"rentoday.id/app/database"
 	"rentoday.id/app/model"
 )
@@ -21,7 +18,6 @@ func NewUserRepository() UserRepository {
 	
 }
 func (r *userRepository) InsertUser(user model.User) (model.User, error) {
-	// user.Password = hashAndSaltPassword(user.Password)
 	res := database.DB.Create(&user)
 	return user, res.Error
 } 

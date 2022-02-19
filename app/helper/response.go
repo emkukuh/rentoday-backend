@@ -23,6 +23,16 @@ func BuildResponse(status bool, data interface{}) Response {
 	return res
 }
 
+func BuildSuccessResponse(data interface{}) Response {
+	res := Response {
+		Status: true,
+		Message: "OK",
+		Errors: nil,
+		Data: data,
+	}
+	return res
+}
+
 func BuildErrorResponse(message string, err string, data interface{}) Response {
 	splittedError := strings.Split(err, "\n")
 	res := Response{

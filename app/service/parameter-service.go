@@ -5,7 +5,7 @@ import (
 	"rentoday.id/app/repository"
 )
 
-var ( 
+var (
 	wardrobeCategoryRepo = repository.ParameterRepository
 )
 
@@ -14,7 +14,7 @@ type ParameterService interface {
 	GetWardrobeMaterials() ([]model.WardrobeMaterial, error)
 }
 
-type parameterService struct {}
+type parameterService struct{}
 
 func NewParameterService() ParameterService {
 	return &parameterService{}
