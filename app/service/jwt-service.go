@@ -5,17 +5,18 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/google/uuid"
 	"rentoday.id/app/config"
 	"rentoday.id/app/constant"
 )
 
 type JwtServiceInterface interface {
-	GenerateToken(email string) string
+	GenerateToken(userID uuid.UUID) string
 	ValidateToken(token string) (*jwt.Token, error)
 }
 
 type JwtCustomClaim struct {
-	Email string `json:"email"`
+	UserId uuid.UUID `json:"userId"`
 	jwt.StandardClaims
 }
 
@@ -39,9 +40,9 @@ func genereateSecretKey() string {
 	return secretKey
 }
 
-func (s *JwtService) GenerateToken(email string) string {
+func (s *JwtService) GenerateToken(userId uuid.UUID) string {
 	claims := &JwtCustomClaim{
-		Email: email,
+		UserId: userId,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: constant.OneDay24Hour,
 			Issuer:    s.Issuer,

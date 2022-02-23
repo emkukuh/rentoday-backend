@@ -23,6 +23,7 @@ func AuthJwt() gin.HandlerFunc {
 		token, err := jwtService.ValidateToken(authHeader)
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
+			c.Set("userId", claims["userId"])
 			log.Println("Claim[email]: ", claims["email"])
 			log.Println("Claim[issuer]: ", claims["issuer"])
 		} else {

@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	"log"
-	"strconv"
 
 	"github.com/mashingan/smapping"
 	"gorm.io/gorm"
@@ -39,9 +38,6 @@ func (a *authAdminService) VerifyCredential(email string, password string) (mode
 func (a *authAdminService) Register(user dto.RegisterDto) (model.Admin, error) {
 	newAdmin := model.Admin{}
 	isDuplicated, err := isAdminEmailDuplicated(user.Email)
-	if err != nil {
-		return newAdmin, errors.New("email belum terdaftar")
-	}
 	if isDuplicated {
 		return newAdmin, errors.New("email sudah terdaftar")
 	}
@@ -49,7 +45,7 @@ func (a *authAdminService) Register(user dto.RegisterDto) (model.Admin, error) {
 	if err != nil {
 		log.Fatalf("failed to map %v", err)
 	}
-	token := jwtService.GenerateToken(strconv.FormatUint(newAdmin.ID, 10))
+	token := jwtService.GenerateToken(newAdmin.ID)
 	newAdmin.AccessToken = token
 	newAdmin.Password = hashAndSaltPassword(user.Password)
 	res, err := adminRepo.InsertUser(newAdmin)

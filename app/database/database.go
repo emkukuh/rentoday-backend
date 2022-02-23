@@ -24,11 +24,11 @@ func Start() {
 	}
 	DB = db
 	DB.AutoMigrate(
+		&model.Admin{},
+		&model.User{},
 		&model.Wardrobe{},
+		&model.SizeDetail{},
 		&model.WardrobeCategory{},
 		&model.WardrobeMaterial{},
-		&model.User{},
-		&model.Admin{},
-		&model.SizeDetail{},
 	)
 }

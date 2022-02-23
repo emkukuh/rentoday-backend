@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -50,9 +51,15 @@ func (c *wardrobeController) FindAll(ctx *gin.Context) {
 func (c *wardrobeController) AddWardrobe(ctx *gin.Context) {
 	var wardrobeDto dto.AddWardrobeRequest
 	ctx.BindJSON(&wardrobeDto)
-	res, err := wardrobeService.Create(wardrobeDto)
+	log.Print("==============")
+	log.Print(wardrobeDto)
+	log.Print("EMAIL ====== ", ctx.GetString("userEmail"))
+	// token := ctx.Request.Header["Authorization"]
+	// userId := c
+	res, err := wardrobeService.Create(wardrobeDto, 3)
 	if err != nil {
 		response := response.BuildErrorResponse(constant.ErrorRequestMessage, err.Error(), nil)
+		log.Print("====== ERROR")
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}

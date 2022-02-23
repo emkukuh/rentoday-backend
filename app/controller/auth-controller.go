@@ -2,14 +2,12 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mashingan/smapping"
 	"rentoday.id/app/constant"
 	"rentoday.id/app/dto"
 	"rentoday.id/app/helper"
-	"rentoday.id/app/model"
 	"rentoday.id/app/service"
 )
 
@@ -40,10 +38,10 @@ func (c *authController) LoginUser(ctx *gin.Context) {
 		return
 	}
 	authResult := authUserService.VerifyCredential(loginDto.Email, loginDto.Password)
-	if v, ok := authResult.(model.User); ok {
-		generatedToken := jwtService.GenerateToken(strconv.FormatUint(v.ID, 10))
-		v.AccessToken = generatedToken
-		response := response.BuildResponse(true, v)
+	if res, ok := authResult.(dto.LoginAdminResponseDto); ok {
+		generatedToken := jwtService.GenerateToken(res.ID)
+		res.AccessToken = generatedToken
+		response := response.BuildResponse(true, res)
 		ctx.JSON(http.StatusOK, response)
 		return
 	}
@@ -62,11 +60,10 @@ func (c *authController) LoginAdmin(ctx *gin.Context) {
 		handleInvalidTokenError(ctx)
 		return
 	}
-	generatedToken := jwtService.GenerateToken(strconv.FormatUint(authResult.ID, 10))
+	generatedToken := jwtService.GenerateToken(authResult.ID)
 	authResult.AccessToken = generatedToken
 	var loginResponseDto dto.LoginAdminResponseDto
 	smapping.FillStruct(&loginResponseDto, smapping.MapFields(&authResult))
-	loginResponseDto.ID = authResult.ID
 	response := response.BuildSuccessResponse(loginResponseDto)
 	ctx.JSON(http.StatusOK, response)
 }

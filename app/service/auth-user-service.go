@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	"log"
-	"strconv"
 
 	"github.com/mashingan/smapping"
 	"golang.org/x/crypto/bcrypt"
@@ -18,21 +17,27 @@ type _authUserService interface {
 	Register(user dto.RegisterDto) (model.User, error)
 }
 
-type authUserService struct {}
+type authUserService struct{}
 
 var (
 	AuthUserService _authUserService = &authUserService{}
-	userRepo = repository.NewUserRepository()
+	userRepo                         = repository.NewUserRepository()
 )
 
 func (service *authUserService) VerifyCredential(email string, password string) interface{} {
-	res := userRepo.VerifyCredential(email, password)
-	if v, ok := res.(model.User); ok {
-		comparedPassword := comparePassword(v.Password, password)
-		if v.Email == email && comparedPassword {
-			return res
-		}
+	user, err := userRepo.VerifyCredential(email, password)
+	if err != nil {
 		return false
+	}
+	responseDto := dto.LoginAdminResponseDto{}
+	comparedPassword := comparePassword(user.Password, password)
+	if user.Email == email && comparedPassword {
+		err := smapping.FillStruct(&responseDto, smapping.MapFields(&user))
+		if err != nil {
+			return false
+		}
+		responseDto.ID = user.ID
+		return responseDto
 	}
 	return false
 }
@@ -50,7 +55,7 @@ func (service *authUserService) Register(user dto.RegisterDto) (model.User, erro
 	if err != nil {
 		log.Fatalf("failed to map %v", err)
 	}
-	token := jwtService.GenerateToken(strconv.FormatUint(newUser.ID, 10))
+	token := jwtService.GenerateToken(newUser.ID)
 	newUser.AccessToken = token
 	newUser.Password = hashAndSaltPassword(user.Password)
 	res, err := userRepo.InsertUser(newUser)
@@ -58,7 +63,7 @@ func (service *authUserService) Register(user dto.RegisterDto) (model.User, erro
 }
 
 func isUserEmailDuplicated(email string) (bool, error) {
-	_, err := userRepo.FindUserByEmail(email) 
+	_, err := userRepo.FindUserByEmail(email)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return false, nil
 	}

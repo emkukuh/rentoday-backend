@@ -1,6 +1,6 @@
 package model
 
 type WardrobeMaterial struct {
-	ID   string `json:"id" gorm:"primaryKey"`
+	BaseModel
 	Name string `json:"name"`
 }
