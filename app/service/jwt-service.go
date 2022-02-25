@@ -13,6 +13,7 @@ import (
 type JwtServiceInterface interface {
 	GenerateToken(userID uuid.UUID) string
 	ValidateToken(token string) (*jwt.Token, error)
+	GetUserIdByToken(token string) (string, error)
 }
 
 type JwtCustomClaim struct {
@@ -65,4 +66,14 @@ func (s *JwtService) ValidateToken(token string) (*jwt.Token, error) {
 		return []byte(s.SecretKey), nil
 
 	})
+}
+
+func (s *JwtService) GetUserIdByToken(token string) (string, error) {
+	currToken, err := s.ValidateToken(token)
+	if err != nil {
+		return "", err
+	}
+	claims := currToken.Claims.(jwt.MapClaims)
+	id := fmt.Sprintf("%v", claims["userId"])
+	return id, nil
 }

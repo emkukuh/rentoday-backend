@@ -27,7 +27,7 @@ func (c *parameterController) GetWardrobeCategories(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, nil)
 		return
 	}
-	response := response.BuildResponse(true, categories)
+	response := helper.BuildResponse(true, categories)
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -37,6 +37,6 @@ func (c *parameterController) GetWardrobeMaterials(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, nil)
 		return
 	}
-	response := response.BuildResponse(true, materials)
+	response := helper.BuildResponse(true, materials)
 	ctx.JSON(http.StatusOK, response)
 }

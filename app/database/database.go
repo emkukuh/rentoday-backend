@@ -28,6 +28,7 @@ func Start() {
 		&model.User{},
 		&model.Wardrobe{},
 		&model.SizeDetail{},
+		&model.WardrobeOwner{},
 		&model.WardrobeCategory{},
 		&model.WardrobeMaterial{},
 	)

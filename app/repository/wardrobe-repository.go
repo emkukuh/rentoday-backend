@@ -16,9 +16,8 @@ type wardrobeRepostory struct{}
 var WardrobeRepository _wardrobeRepository = &wardrobeRepostory{}
 
 func (w *wardrobeRepostory) InsertWardrobe(wardrobe model.Wardrobe) (model.Wardrobe, error) {
-	var newWardrobe model.Wardrobe
-	res := database.DB.Create(&newWardrobe)
-	return newWardrobe, res.Error
+	res := database.DB.Create(&wardrobe)
+	return wardrobe, res.Error
 }
 
 func (w *wardrobeRepostory) FindAllWardrobe() ([]model.Wardrobe, error) {

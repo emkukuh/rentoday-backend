@@ -12,9 +12,8 @@ import (
 )
 
 var (
-	jwtService       service.JwtServiceInterface = service.NewJwtService()
-	authUserService                              = service.AuthUserService
-	authAdminService                             = service.AuthAdminService
+	authUserService  = service.AuthUserService
+	authAdminService = service.AuthAdminService
 )
 
 type AuthControllerInterface interface {
@@ -41,7 +40,7 @@ func (c *authController) LoginUser(ctx *gin.Context) {
 	if res, ok := authResult.(dto.LoginAdminResponseDto); ok {
 		generatedToken := jwtService.GenerateToken(res.ID)
 		res.AccessToken = generatedToken
-		response := response.BuildResponse(true, res)
+		response := helper.BuildResponse(true, res)
 		ctx.JSON(http.StatusOK, response)
 		return
 	}
@@ -64,7 +63,7 @@ func (c *authController) LoginAdmin(ctx *gin.Context) {
 	authResult.AccessToken = generatedToken
 	var loginResponseDto dto.LoginAdminResponseDto
 	smapping.FillStruct(&loginResponseDto, smapping.MapFields(&authResult))
-	response := response.BuildSuccessResponse(loginResponseDto)
+	response := helper.BuildSuccessResponse(loginResponseDto)
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -80,7 +79,7 @@ func (c *authController) RegisterUser(ctx *gin.Context) {
 		handleBadRequestError(ctx, err)
 		return
 	}
-	response := response.BuildResponse(true, newUser)
+	response := helper.BuildResponse(true, newUser)
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -96,16 +95,16 @@ func (c *authController) RegisterAdmin(ctx *gin.Context) {
 		handleBadRequestError(ctx, err)
 		return
 	}
-	response := response.BuildResponse(true, newAdmin)
+	response := helper.BuildResponse(true, newAdmin)
 	ctx.JSON(http.StatusOK, response)
 }
 
 func handleBadRequestError(ctx *gin.Context, err error) {
-	response := response.BuildErrorResponse(constant.ErrorRequestMessage, err.Error(), response.EmptyObj{})
+	response := helper.BuildErrorResponse(constant.ErrorRequestMessage, err.Error(), helper.EmptyObj{})
 	ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 }
 
 func handleInvalidTokenError(ctx *gin.Context) {
-	response := response.BuildErrorResponse("invalid credential", "invalid credential", response.EmptyObj{})
+	response := helper.BuildErrorResponse("invalid credential", "invalid credential", helper.EmptyObj{})
 	ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
 }

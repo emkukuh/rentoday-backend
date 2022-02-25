@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"rentoday.id/app/constant"
-	"rentoday.id/app/helper"
+	response "rentoday.id/app/helper"
 	"rentoday.id/app/service"
 )
 
@@ -23,7 +23,6 @@ func AuthJwt() gin.HandlerFunc {
 		token, err := jwtService.ValidateToken(authHeader)
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
-			c.Set("userId", claims["userId"])
 			log.Println("Claim[email]: ", claims["email"])
 			log.Println("Claim[issuer]: ", claims["issuer"])
 		} else {

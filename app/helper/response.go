@@ -1,34 +1,34 @@
-package response
+package helper
 
 import (
 	"strings"
 )
 
-type Response struct {	
-	Status	bool		`json:"status"`
-	Message	string		`json:"message"`
-	Errors	interface{}	`json:"errors,omitempty"`
-	Data	interface{}	`json:"data"`
+type Response struct {
+	Status  bool        `json:"status"`
+	Message string      `json:"message"`
+	Errors  interface{} `json:"errors,omitempty"`
+	Data    interface{} `json:"data"`
 }
 
-type EmptyObj struct {}
+type EmptyObj struct{}
 
 func BuildResponse(status bool, data interface{}) Response {
-	res := Response {
-		Status: status,
+	res := Response{
+		Status:  status,
 		Message: "OK",
-		Errors: nil,
-		Data: data,
+		Errors:  nil,
+		Data:    data,
 	}
 	return res
 }
 
 func BuildSuccessResponse(data interface{}) Response {
-	res := Response {
-		Status: true,
+	res := Response{
+		Status:  true,
 		Message: "OK",
-		Errors: nil,
-		Data: data,
+		Errors:  nil,
+		Data:    data,
 	}
 	return res
 }
@@ -36,10 +36,10 @@ func BuildSuccessResponse(data interface{}) Response {
 func BuildErrorResponse(message string, err string, data interface{}) Response {
 	splittedError := strings.Split(err, "\n")
 	res := Response{
-		Status: false,
+		Status:  false,
 		Message: message,
-		Errors: splittedError,
-		Data: data,
+		Errors:  splittedError,
+		Data:    data,
 	}
 	return res
 }
