@@ -14,4 +14,5 @@ func CreateRouter(router *gin.Engine) {
 	group := router.Group("api/wardrobe", middleware.AuthJwt())
 	group.GET("/list", wardrobeController.FindAll)
 	group.POST("/add", wardrobeController.AddWardrobe)
+	group.GET("/list-by-user", wardrobeController.FindByUser)
 }
