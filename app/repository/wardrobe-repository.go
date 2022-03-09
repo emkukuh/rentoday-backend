@@ -9,7 +9,6 @@ type _wardrobeRepository interface {
 	InsertWardrobe(wardrobe model.Wardrobe) (model.Wardrobe, error)
 	FindAllWardrobe() ([]model.Wardrobe, error)
 	FindAllWardrobeByUserId(userId string) ([]model.Wardrobe, error)
-	FindWardrobesByEmail(email string) ([]model.Wardrobe, error)
 }
 
 type wardrobeRepostory struct{}
@@ -29,10 +28,7 @@ func (w *wardrobeRepostory) FindAllWardrobe() ([]model.Wardrobe, error) {
 
 func (w *wardrobeRepostory) FindAllWardrobeByUserId(userId string) ([]model.Wardrobe, error) {
 	var wardrobes []model.Wardrobe
-	res := database.DB.Where("user_id=?", userId).Find(&wardrobes)
+	// res := database.DB.Where("user_id=?", userId).Find(&wardrobes)
+	res := database.DB.Preload("size_details").Find(&wardrobes, "user_id=?", userId)
 	return wardrobes, res.Error
-}
-
-func (w *wardrobeRepostory) FindWardrobesByEmail(email string) ([]model.Wardrobe, error) {
-	return make([]model.Wardrobe, 0), nil
 }

@@ -7,8 +7,7 @@ import (
 
 type Wardrobe struct {
 	BaseModel
-	UserID string `json:"userId,omitempty"`
-	// User          User      `gorm:"foreignkey:UserID" json:"user"`
+	UserID       string         `json:"userId,omitempty"`
 	LabelName    string         `json:"labelName"`
 	Category     string         `json:"category"`
 	Condition    string         `json:"condition"`

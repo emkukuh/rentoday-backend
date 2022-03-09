@@ -12,7 +12,7 @@ type wardrobeSizeDetail struct {
 	Pesak           *uint `json:"pesak,omitempty"`
 }
 
-type AddWardrobeRequest struct {
+type AddWardrobe struct {
 	UserID     string             `json:"userId"`
 	LabelName  string             `json:"labelName"`
 	Category   string             `json:"category"`
@@ -22,21 +22,4 @@ type AddWardrobeRequest struct {
 	Material   string             `json:"material"`
 	Defects    []string           `json:"defects,omitempty"`
 	Colors     []string           `json:"colors"`
-}
-
-type AddWardrobeResponse struct {
-	// OwnerEmail string `json:"ownerEmail"`
-	LabelName  string             `json:"labelName"`
-	Category   string             `json:"category"`
-	Condition  string             `json:"condition"`
-	LabelSize  string             `json:"labelSize"`
-	SizeDetail wardrobeSizeDetail `json:"sizeDetail"`
-	Material   string             `json:"material"`
-	Defects    []string           `json:"defects,omitempty"`
-	Colors     []string           `json:"colors"`
-	// Images     []string           `json:"images"`
-}
-
-type GetWardrobesResponse struct {
-	Wardrobes []AddWardrobeResponse `json:"wardrobes"`
 }

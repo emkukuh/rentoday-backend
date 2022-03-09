@@ -10,10 +10,10 @@ services:
       DB_PASSWORD: password
       JWT_SECRET_KEY: secret
     ports:
-    - 80:4000
+      - 4000:4000
     working_dir: /source
     volumes:
-    - ./:/source
+      - ./:/source
     depends_on:
       - rentoday-postgres
   rentoday-postgres:

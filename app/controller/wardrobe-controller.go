@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mashingan/smapping"
 
 	"rentoday.id/app/constant"
 	"rentoday.id/app/dto"
@@ -57,7 +56,7 @@ func (c *wardrobeController) FindByUser(ctx *gin.Context) {
 }
 
 func (c *wardrobeController) AddWardrobe(ctx *gin.Context) {
-	var wardrobeDto dto.AddWardrobeRequest
+	var wardrobeDto dto.AddWardrobe
 	ctx.BindJSON(&wardrobeDto)
 	authHeader := helper.GetHeaderAuth(ctx)
 	userId, err := jwtService.GetUserIdByToken(authHeader)
@@ -70,8 +69,7 @@ func (c *wardrobeController) AddWardrobe(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
-	var wardrobeResponse dto.AddWardrobeResponse
-	smapping.FillStruct(&wardrobeResponse, smapping.MapFields(&res))
-	response := helper.BuildSuccessResponse(wardrobeResponse)
+	response := helper.BuildSuccessResponse(res)
+	helper.LogStruct("====", res.SizeDetail)
 	ctx.JSON(http.StatusOK, response)
 }
